@@ -1,0 +1,14 @@
+<div>
+  <mat-toolbar *ngIf="authService.getAuthToken()" color="primary">
+    <span>Loja</span>
+    <span class="spacer"></span>
+    <button mat-raised-button routerLink="/users" class="ms-5">Users</button>
+    <button mat-raised-button routerLink="/products" class="ms-2">Products</button>
+    <button mat-raised-button routerLink="/clients" class="ms-2">Clients</button>
+    <button mat-raised-button routerLink="/sales" class="ms-2">Sales</button>
+  </mat-toolbar>
+  <div class="m-5">
+    <router-outlet></router-outlet>
+  </div>
+  
+</div>

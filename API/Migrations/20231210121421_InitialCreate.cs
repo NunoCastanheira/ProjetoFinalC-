@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -51,8 +52,20 @@ namespace ProjetoFinalC_.Migrations
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Name = table.Column<string>(type: "longtext", nullable: false),
-                    Email = table.Column<string>(type: "longtext", nullable: false),
-                    Password = table.Column<string>(type: "longtext", nullable: false)
+                    UserName = table.Column<string>(type: "longtext", nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "longtext", nullable: true),
+                    Email = table.Column<string>(type: "longtext", nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "longtext", nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "longtext", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "longtext", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "longtext", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -121,6 +134,27 @@ namespace ProjetoFinalC_.Migrations
                 name: "IX_Sales_UserId",
                 table: "Sales",
                 column: "UserId");
+
+            //Test Users
+            var passwordHasher = new PasswordHasher<object>();
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Name", "Email", "PasswordHash", "PhoneNumber" },
+                values: new object[] { Guid.NewGuid(), "John Doe", "john.doe@example.com", passwordHasher.HashPassword(null, "password123"), "123456789" }
+            );
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Name", "Email", "PasswordHash", "PhoneNumber" },
+                values: new object[] { Guid.NewGuid(), "Alice Johnson", "alice.johnson@example.com", passwordHasher.HashPassword(null, "securepass"), "987654321" }
+            );
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Name", "Email", "PasswordHash", "PhoneNumber" },
+                values: new object[] { Guid.NewGuid(), "Bob Smith", "bob.smith@example.com", passwordHasher.HashPassword(null, "strongpassword"), "5551234567" }
+            );
         }
 
         /// <inheritdoc />

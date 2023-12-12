@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ProjetoFinalC_.Data;
 using ProjetoFinalC_.Entities;
+using ProjetoFinalC_.Services;
 using ProjetoFinalC_.Services.Interfaces;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,16 @@ builder.Services.AddScoped<IGenericService<Product>, GenericService<Product>>();
 builder.Services.AddScoped<IGenericService<Sale>, GenericService<Sale>>();
 builder.Services.AddScoped<IGenericService<SaleProduct>, GenericService<SaleProduct>>();
 builder.Services.AddScoped<IGenericService<User>, GenericService<User>>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITokenService>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var secretKey = configuration.GetValue<string>("JwtSettings:SecretKey");
+    var issuer = configuration.GetValue<string>("JwtSettings:Issuer");
+    var audience = configuration.GetValue<string>("JwtSettings:Audience");
+
+    return new TokenService(secretKey, issuer, audience);
+});
 
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -35,7 +47,8 @@ builder.Services.AddCors(options =>
                       {
                           policy.WithOrigins("http://localhost:4200")
                           .AllowAnyHeader()
-                          .AllowAnyMethod();
+                          .AllowAnyMethod()
+                          .AllowCredentials();
                       });
 });
 
@@ -62,15 +75,17 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = "your_issuer",
-        ValidAudience = "your_audience",
-        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("your_super_secret_key"))
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]))
     };
 });
 
@@ -84,7 +99,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("_myAllowSpecificOrigins");
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

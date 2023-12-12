@@ -1,0 +1,51 @@
+<div class="w-25 m-auto">
+    <mat-card style="background-color:  #A7C7E7 ;">
+      <h2 class="mt-5 text-center">Login</h2>
+      <form [formGroup]="loginForm" (ngSubmit)="login()" class="m-5">
+        <div class="d-flex flex-column">
+          <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <input matInput type="text" formControlName="email">
+            <mat-error *ngIf="loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched">
+              Email is required.
+            </mat-error>
+            <mat-error *ngIf="loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched">
+              Please enter a valid email address.
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password">
+            <mat-error *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched">
+              Password is required.
+            </mat-error>
+          </mat-form-field>
+          <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">Login</button>
+        </div>
+   
+      </form>
+    </mat-card>
+  </div>
+  
+<!-- <mat-card class="w-25 m-auto">
+  <img src="/assets/images/Logo.png" alt="Logo" style="width: 150px;" class="m-auto">
+  <h2 class="m-2 text-center">Login</h2>
+  <form class="m-5" [formGroup]="loginForm" (ngSubmit)="signIn()">
+      <div class="d-flex flex-column"> 
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" placeholder="Enter your email" required>
+        </mat-form-field>
+    
+        <mat-form-field appearance="fill">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" type="password" placeholder="Enter your password" required>
+        </mat-form-field>
+  
+          <button mat-raised-button color="primary" [disabled]="!loginForm.valid" type="submit">Login</button>
+      </div>
+      <button mat-raised-button (click)="signOut()">Logout</button>
+  </form>
+  
+</mat-card> -->
+  

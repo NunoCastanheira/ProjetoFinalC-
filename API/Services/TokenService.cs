@@ -9,10 +9,14 @@ namespace ProjetoFinalC_.Services
     public class TokenService : ITokenService
     {
         private readonly string _secretKey;
+        private readonly string _issuer;
+        private readonly string _audience;
 
-        public TokenService(string secretKey)
+        public TokenService(string secretKey,string issuer, string audience)
         {
             _secretKey = secretKey;
+            _issuer = issuer;
+            _audience = audience;
         }
 
         public string GenerateToken(IEnumerable<Claim> claims)
@@ -22,6 +26,8 @@ namespace ProjetoFinalC_.Services
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
+                Audience = _audience,
+                Issuer = _issuer,
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -41,9 +47,9 @@ namespace ProjetoFinalC_.Services
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(key),
                 ValidateIssuer = true,
-                ValidIssuer = "API",
+                ValidIssuer = _issuer,
                 ValidateAudience = true,
-                ValidAudience = "API_Client",
+                ValidAudience = _audience,
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero
             };

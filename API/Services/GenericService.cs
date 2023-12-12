@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjetoFinalC_.Data;
+using ProjetoFinalC_.Entities;
 using ProjetoFinalC_.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,12 @@ public class GenericService<T> : IGenericService<T> where T : class
 
     public async Task CreateAsync(T model)
     {
+        if (typeof(T) == typeof(SaleProduct))
+        {
+            var saleProduct = model as SaleProduct;
+            await UpdateProductStockAsync(saleProduct.Id, saleProduct.Quantity);
+          
+        }
         _context.Set<T>().Add(model);
         await _context.SaveChangesAsync();
     }
@@ -51,4 +58,28 @@ public class GenericService<T> : IGenericService<T> where T : class
         _context.Set<T>().Remove(entity);
         await _context.SaveChangesAsync();
     }
+    private async Task UpdateProductStockAsync(Guid id, int qty )
+    {
+
+        // Get the existing product from the database
+        var existingProduct = await _context.Products.FindAsync(id);
+
+        if (existingProduct == null)
+        {
+            // Handle the case where the product doesn't exist
+            throw new InvalidOperationException($"Product with Id {id} not found");
+        }
+
+        // Subtract the sale quantity from the product stock
+        existingProduct.Quantity -= qty;
+        if(existingProduct.Quantity < 0)
+        {
+            throw new InvalidOperationException("Stock supply not sufficient");
+        }
+
+        // Update the product in the database
+        _context.Entry(existingProduct).CurrentValues.SetValues(existingProduct);
+        await _context.SaveChangesAsync();
+    }
+
 }

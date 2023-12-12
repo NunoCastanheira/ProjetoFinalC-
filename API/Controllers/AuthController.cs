@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjetoFinalC_.Entities;
+using ProjetoFinalC_.Models;
 using ProjetoFinalC_.Services;
 using ProjetoFinalC_.Services.Interfaces;
 using System.Security.Claims;
@@ -10,11 +11,11 @@ namespace ProjetoFinalC_.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
         private readonly ITokenService _tokenService;
         private readonly IConfiguration _configuration;
 
-        public AuthController(UserService userService, ITokenService tokenService, IConfiguration configuration)
+        public AuthController(IUserService userService, ITokenService tokenService, IConfiguration configuration)
         {
             _userService = userService;
             _tokenService = tokenService;
@@ -22,11 +23,12 @@ namespace ProjetoFinalC_.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] string email, [FromBody]string password)
+        public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
         {
             try
+
             {
-                var user = await _userService.GetUserByEmailAndPasswordAsync(email, password);
+                var user = await _userService.GetUserByEmailAndPasswordAsync(loginModel.Email, loginModel.Password);
 
                 if (user == null)
                 {

@@ -1,21 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ProjetoFinalC_.Data;
 using ProjetoFinalC_.Entities;
+using ProjetoFinalC_.Services.Interfaces;
 
 namespace ProjetoFinalC_.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
-        private readonly Context _context;
+        private readonly UserManager<User> _userManager;
 
-        public UserService(Context context)
+        public UserService(UserManager<User> userManager)
         {
-            _context = context;
+            _userManager = userManager;
         }
+
         public async Task<User> GetUserByEmailAndPasswordAsync(string email, string password)
         {
-            // Example: Find a user by email and password
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user != null && await _userManager.CheckPasswordAsync(user, password))
+            {
+                return user;
+            }
+
+            return null;
         }
     }
 }

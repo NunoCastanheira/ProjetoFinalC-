@@ -116,16 +116,50 @@ namespace ProjetoFinalC_.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("longtext");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("UserName")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
