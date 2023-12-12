@@ -35,14 +35,14 @@ namespace ProjetoFinalC_.Controllers
                     return Unauthorized("Invalid credentials");
                 }
 
-                // Create claims for the user
+                // Criar claim para utilizador
                 var claims = new[]
                 {
                 new Claim(ClaimTypes.Name, user.Name),
                 new Claim(ClaimTypes.Email, user.Email),
             };
 
-                // Generate a JWT token
+                // Gerar token
                 var token = _tokenService.GenerateToken(claims);
 
                 return Ok(new { Token = token });

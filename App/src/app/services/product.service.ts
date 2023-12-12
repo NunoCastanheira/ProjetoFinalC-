@@ -4,37 +4,34 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { Product } from '../models/products.model';
+import { AuthService } from './auth.service';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
-  private apiUrl = 'http://localhost:5000/api/product'; // Adjust the URL to match your backend API
+  private apiUrl = 'http://localhost:5000/api/products'; 
 
-  constructor(private http: HttpClient, private toastr: ToastrService) {}
+  constructor(private http: HttpClient, private toastr: ToastrService, private authService: AuthService) {}
 
-  // Create a new product
+  // Criar novo produto
+
   createProduct(product: Product): Observable<string> {
     const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getAuthToken()}`,
       'Content-Type': 'application/json',
     });
 
-    return this.http.post<string>(`${this.apiUrl}/create`, product, { headers }).pipe(
-      map((res: string) => {
-        this.toastr.success(res, 'Create Success');
-        return res;
-      }),
-      catchError((error) => {
-        this.toastr.error('Error creating product', 'Create Error');
-        throw error;
-      })
-    );
+    return this.http.post(`${this.apiUrl}/create`, product, { headers, responseType: 'text' });
   }
 
-  // Get the list of all products
+  // Buscar lista de produtos
   getAllProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.apiUrl}/list`).pipe(
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getAuthToken()}`
+    });
+    return this.http.get<Product[]>(`${this.apiUrl}/list`,{ headers }).pipe(
       catchError((error) => {
         this.toastr.error('Error retrieving products', 'Error');
         throw error;
@@ -42,45 +39,31 @@ export class ProductService {
     );
   }
 
-  // Get a product by ID
-  getProductById(productId: string): Observable<Product> {
-    return this.http.get<Product>(`${this.apiUrl}/get/${productId}`).pipe(
-      catchError((error) => {
-        this.toastr.error('Error retrieving product by ID', 'Error');
-        throw error;
-      })
-    );
-  }
-
-  // Update a product
-  updateProduct(productId: string, updatedProduct: Product): Observable<string> {
+  // Buscar produto por id
+  getProductById(productId: string): Observable<string> {
     const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getAuthToken()}`,
       'Content-Type': 'application/json',
     });
 
-    return this.http.put<string>(`${this.apiUrl}/update/${productId}`, updatedProduct, { headers }).pipe(
-      map((res: string) => {
-        this.toastr.success(res, 'Update Success');
-        return res;
-      }),
-      catchError((error) => {
-        this.toastr.error('Error updating product', 'Update Error');
-        throw error;
-      })
-    );
+    return this.http.post(`${this.apiUrl}/create`, productId, { headers, responseType: 'text' });
   }
 
-  // Delete a product
+  // Atualizar produto
+  updateProduct(productId: string, updatedProduct: Product): Observable<string> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getAuthToken()}`,
+    });
+
+    return this.http.put(`${this.apiUrl}/update/${productId}`, updatedProduct, { headers, responseType: 'text' });
+  }
+
+  // Apagar produto
   deleteProduct(productId: string): Observable<string> {
-    return this.http.delete<string>(`${this.apiUrl}/delete/${productId}`).pipe(
-      map((res: string) => {
-        this.toastr.success(res, 'Delete Success');
-        return res;
-      }),
-      catchError((error) => {
-        this.toastr.error('Error deleting product', 'Delete Error');
-        throw error;
-      })
-    );
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getAuthToken()}`
+    });
+  
+    return this.http.delete(`${this.apiUrl}/delete/${productId}`, { headers, responseType: 'text' });
   }
 }

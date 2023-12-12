@@ -13,7 +13,7 @@ namespace ProjetoFinalC_.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    
     public class UserController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
@@ -34,7 +34,7 @@ namespace ProjetoFinalC_.Controllers
                     UserName = model.Email, 
                     Email = model.Email,
                     PhoneNumber = model.PhoneNumber
-                    // You can add more properties as needed
+                    
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -91,13 +91,13 @@ namespace ProjetoFinalC_.Controllers
 
             if (!string.IsNullOrEmpty(model.Email))
             {
-                // Validate and update the email if provided
-                var newEmail = model.Email.ToLowerInvariant(); // Ensure consistent casing
+                // Validar email
+                var newEmail = model.Email.ToLowerInvariant();
                 if (await _userManager.FindByEmailAsync(newEmail) == null)
                 {
                     user.Email = newEmail;
                     user.UserName = newEmail;
-                    //user.NormalizedEmail = newEmail.ToUpperInvariant();
+                    
                 }
                 else
                 {

@@ -1,5 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Crypto.Macs;
 using ProjetoFinalC_.Entities;
+using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 
 namespace ProjetoFinalC_.Data
 {
@@ -16,26 +19,34 @@ namespace ProjetoFinalC_.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configure entity relationships, constraints, etc.
-            // Example:
-            // modelBuilder.Entity<User>().HasMany(u => u.Orders).WithOne(o => o.User);
+            // Configurar relações
+        
+
+
+            modelBuilder.Entity<SaleProduct>()
+           .HasOne(sp => sp.Sale)
+           .WithMany(s => s.SaleProducts)
+           .HasForeignKey(sp => sp.SaleId)
+           .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Sale>()
-                .HasMany(s => s.SaleProducts)
-                .WithOne(sp => sp.Sale)
-                .HasForeignKey(sp => sp.SaleId)
-                .OnDelete(DeleteBehavior.Cascade);
+            .HasOne(s => s.User)
+            .WithMany(u => u.Sales)
+            .HasForeignKey(s => s.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Sale>()
+            .HasMany(s => s.SaleProducts)
+            .WithOne(sp => sp.Sale)
+            .HasForeignKey(sp => sp.SaleId)
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Product>()
-                .HasMany(p => p.SaleProducts)
-                .WithOne(sp => sp.Product)
-                .HasForeignKey(sp => sp.ProductId)
-                .OnDelete(DeleteBehavior.Cascade);
+           .HasMany(p => p.SaleProducts)
+           .WithOne(sp => sp.Product)
+           .HasForeignKey(sp => sp.ProductId)
+           .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Sales)
-                .WithOne(s => s.User)
-                .HasForeignKey(s => s.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

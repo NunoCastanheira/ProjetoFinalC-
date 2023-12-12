@@ -24,6 +24,7 @@ builder.Services.AddScoped<IGenericService<Sale>, GenericService<Sale>>();
 builder.Services.AddScoped<IGenericService<SaleProduct>, GenericService<SaleProduct>>();
 builder.Services.AddScoped<IGenericService<User>, GenericService<User>>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<DataSeederService>();
 builder.Services.AddScoped<ITokenService>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
@@ -55,7 +56,7 @@ builder.Services.AddCors(options =>
 //Authentication
 builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
 {
-    // Identity options
+    // Oções de indentity
     options.Password.RequiredLength = 8;
     options.User.RequireUniqueEmail = true;
 })
@@ -63,7 +64,7 @@ builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    // Additional Identity options
+    // Mais oções de indentity
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
     options.Lockout.MaxFailedAccessAttempts = 5;
 });
@@ -96,6 +97,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+using (var scope = app.Services.CreateScope())
+{
+    var dataSeedService = scope.ServiceProvider.GetRequiredService<DataSeederService>();
+    await dataSeedService.SeedData();
 }
 
 app.UseHttpsRedirection();

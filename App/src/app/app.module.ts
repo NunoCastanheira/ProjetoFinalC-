@@ -24,6 +24,10 @@ import { UsersComponent } from './users/users.component';
 import { UserCardComponent } from './users/user-card/user-card.component';
 import { ProductsComponent } from './products/products.component';
 import { ProductsCardComponent } from './products/products-card/products-card.component';
+import { ClientsComponent } from './clients/clients.component';
+import { ClientsCardComponent } from './clients/clients-card/clients-card.component';
+import { SalesComponent } from './sales/sales.component';
+import { SaleCardComponent } from './sales/sales-card/sales-card.component.';
 
 @NgModule({
   declarations: [
@@ -32,7 +36,11 @@ import { ProductsCardComponent } from './products/products-card/products-card.co
     UsersComponent,
     UserCardComponent,
     ProductsComponent,
-    ProductsCardComponent
+    ProductsCardComponent,
+    ClientsComponent,
+    ClientsCardComponent,
+    SalesComponent,
+    SaleCardComponent
   ],
   imports: [
     BrowserModule,

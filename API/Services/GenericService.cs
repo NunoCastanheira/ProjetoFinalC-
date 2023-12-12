@@ -61,23 +61,23 @@ public class GenericService<T> : IGenericService<T> where T : class
     private async Task UpdateProductStockAsync(Guid id, int qty )
     {
 
-        // Get the existing product from the database
+        // Buscar Produto de bd
         var existingProduct = await _context.Products.FindAsync(id);
 
         if (existingProduct == null)
         {
-            // Handle the case where the product doesn't exist
+            // Caso não encontre produto
             throw new InvalidOperationException($"Product with Id {id} not found");
         }
 
-        // Subtract the sale quantity from the product stock
+        // Tirar stock de produto
         existingProduct.Quantity -= qty;
         if(existingProduct.Quantity < 0)
         {
             throw new InvalidOperationException("Stock supply not sufficient");
         }
 
-        // Update the product in the database
+        // Atualizar produto na bd
         _context.Entry(existingProduct).CurrentValues.SetValues(existingProduct);
         await _context.SaveChangesAsync();
     }

@@ -7,9 +7,6 @@ import { ToastrService } from 'ngx-toastr';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
 
-// @Injectable({
-//   providedIn: 'root'
-// })
 
 @Component({
   selector: 'app-user-card',
@@ -19,7 +16,6 @@ import { UserService } from '../../services/user.service';
 export class UserCardComponent implements OnInit{
   user: User;
   userForm: FormGroup;
-  // roleOptions: {key: string, value: number}[] = [];
   roleOptions: string[] = [];
   numbers: number[] = [];
   constructor(
@@ -41,7 +37,6 @@ export class UserCardComponent implements OnInit{
 
   ngOnInit(): void {
     
-    // this.numbers.map(n => this.roleOptions[n] = {key: this.roleOptions[n].key, value: n})
   }
 
   onSubmit(){
@@ -62,7 +57,6 @@ export class UserCardComponent implements OnInit{
           this.toastr.error('Error creating user', 'Create Error');
         }
       );
-      // this.userService.createUser(user.value).
     }else{
       
       this.user.name = this.userForm.value.name;

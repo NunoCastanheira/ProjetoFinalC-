@@ -12,6 +12,7 @@ export class UserService {
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
+  //Buscar listade  utilizadores
   getUsers(): Observable<User[]> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.authService.getAuthToken()}`
@@ -19,7 +20,7 @@ export class UserService {
 
     return this.http.get<User[]>(`${this.apiUrl}/list`, { headers });
   }
-
+  //Buscar utilizador por id
   getUserById(userId: string): Observable<User> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.authService.getAuthToken()}`
@@ -28,6 +29,7 @@ export class UserService {
     return this.http.get<User>(`${this.apiUrl}/get/${userId}`, { headers });
   }
 
+  //Criar utilizador
   createUser(user: User): Observable<string> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.authService.getAuthToken()}`,
@@ -37,6 +39,7 @@ export class UserService {
     return this.http.post(`${this.apiUrl}/create`, user, { headers, responseType: 'text' });
   }
 
+  //Atualizar utilizador
   updateUser(userId: string, user: User): Observable<string> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.authService.getAuthToken()}`,
@@ -44,6 +47,8 @@ export class UserService {
 
     return this.http.put(`${this.apiUrl}/update/${userId}`, user, { headers, responseType: 'text' });
   }
+
+  //Apagar utilizador
   deleteUser(userId: string): Observable<string> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.authService.getAuthToken()}`

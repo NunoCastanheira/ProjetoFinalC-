@@ -26,7 +26,6 @@ export class UsersComponent implements AfterViewInit{
 
   constructor(private userService: UserService, private  dialog: MatDialog, private toastr: ToastrService) {
 
-    // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource<User>();
   }
 
@@ -36,7 +35,6 @@ export class UsersComponent implements AfterViewInit{
 
   loadUsers(): void{
     this.userService.getUsers().subscribe(  (res: User[])=> {
-      console.log(res); // Log the entire response to the console
       this.dataSource = new MatTableDataSource(res);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;

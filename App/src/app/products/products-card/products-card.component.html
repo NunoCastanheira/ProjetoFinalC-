@@ -1,28 +1,27 @@
-<h2 class="m-2 text-center">{{this.user == undefined ? "Create new user": "Edit user "+this.user.name}}</h2>
-<form class="m-5" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+<h2 class="m-2 text-center">{{this.product == undefined ? "Create new user": "Edit user "+this.product.name}}</h2>
+<form class="m-5" [formGroup]="productForm" (ngSubmit)="onSubmit()">
   <div class="d-flex flex-column">
     <mat-form-field appearance="fill">
       <mat-label>Name</mat-label>
-      <input matInput formControlName="name" placeholder="Enter your name" required>
+      <input matInput formControlName="name" placeholder="Enter product name" required>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Email</mat-label>
-      <input matInput formControlName="email" type="email" placeholder="Enter your email" required>
+      <mat-label>Description</mat-label>
+      <input matInput formControlName="description" type="text" placeholder="Enter product Description" required>
     </mat-form-field>
 
-    <mat-form-field *ngIf="user === undefined" appearance="fill">
-      <mat-label>Password</mat-label>
-      <input matInput formControlName="password" type="password" placeholder="Enter your password" [attr.required]="user === undefined">
+    <mat-form-field appearance="fill">
+      <mat-label>Price</mat-label>
+      <input matInput formControlName="price" type="number" placeholder="Enter product price" required>
     </mat-form-field>
-    <p *ngIf="user === undefined">Passwords must be at least 8 characters., Passwords must have at least one non alphanumeric character., Passwords must have at least one lowercase ('a'-'z')., Passwords must have at least one uppercase ('A'-'Z').</p>
     <mat-form-field  appearance="fill">
-      <mat-label>Phonenumber</mat-label>
-      <input matInput formControlName="phoneNumber" type="string" placeholder="Enter your Phonenumber" required>
+      <mat-label>Quantity</mat-label>
+      <input matInput formControlName="quantity" type="number" placeholder="Enter product quantity" required>
     </mat-form-field>
 
     <div class="d-flex gap-3 justify-content-center">
-      <button mat-raised-button color="primary" [disabled]="!userForm.valid" type="submit">Submit</button>
+      <button mat-raised-button color="primary" [disabled]="!productForm.valid" type="submit">Submit</button>
       <button mat-raised-button color="warn" [mat-dialog-close]="false">Cancel</button>
     </div>
     

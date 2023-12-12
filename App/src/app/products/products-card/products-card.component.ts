@@ -6,10 +6,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
+import { ProductService } from '../../services/product.service';
+import { Product } from '../../models/products.model';
 
-// @Injectable({
-//   providedIn: 'root'
-// })
+
 
 @Component({
   selector: 'app-user-card',
@@ -17,37 +17,34 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./products-card.component.scss']
 })
 export class ProductsCardComponent implements OnInit{
-  user: User;
-  userForm: FormGroup;
-  // roleOptions: {key: string, value: number}[] = [];
+  product: Product;
+  productForm: FormGroup;
   roleOptions: string[] = [];
   numbers: number[] = [];
   constructor(
     public dialogRef: MatDialogRef<ProductsCardComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: User,
+    @Inject(MAT_DIALOG_DATA) public data: Product,
     private fb: FormBuilder,
-    private userService: UserService,
+    private productService: ProductService,
     private toastr: ToastrService
   ){
-    this.user = data;
-    console.log(this.user,'<--- card')
-    this.userForm = this.fb.group({
-      name: [this.user?.name, Validators.required],
-      email: [this.user?.email, [Validators.required, Validators.email]],
-      password: [this.user?.password, this.user==undefined?Validators.required:''],
-      phoneNumber: [this.user?.phoneNumber, Validators.required],
+    this.product = data;
+    this.productForm = this.fb.group({
+      name: [this.product?.name, Validators.required],
+      description: [this.product?.description, Validators.required],
+      price: [this.product?.price, Validators.required],
+      quantity: [this.product?.quantity, Validators.required],
     });
   }
 
   ngOnInit(): void {
     
-    // this.numbers.map(n => this.roleOptions[n] = {key: this.roleOptions[n].key, value: n})
   }
 
   onSubmit(){
-    if(this.user == undefined){
-      console.log(this.userForm.value);
-      this.userService.createUser(this.userForm.value).subscribe(
+    if(this.product == undefined){
+      console.log(this.productForm.value);
+      this.productService.createProduct(this.productForm.value).subscribe(
         (res: string) => {
           if (res.startsWith('Error')) {
             console.error(res);
@@ -58,25 +55,26 @@ export class ProductsCardComponent implements OnInit{
           }
         },
         (error) => {
-          console.error('Error creating user:', error);
-          this.toastr.error('Error creating user', 'Create Error');
+          console.error('Error creating product:', error);
+          this.toastr.error('Error creating product', 'Create Error');
         }
       );
-      // this.userService.createUser(user.value).
+      // this.productService.createproduct(product.value).
     }else{
       
-      this.user.name = this.userForm.value.name;
-      this.user.email = this.userForm.value.email;
-      this.user.phoneNumber = this.userForm.value.phoneNumber;
-      console.log(this.user)
-      this.userService.updateUser(this.user.id, this.user).subscribe(
+      this.product.name = this.productForm.value.name;
+      this.product.description = this.productForm.value.description;
+      this.product.price = this.productForm.value.price;
+      this.product.quantity = this.productForm.value.quantity;
+      console.log(this.product)
+      this.productService.updateProduct(this.product.id, this.product).subscribe(
         (res: string) => {
           this.toastr.success(res, 'Update Success');
           this.dialogRef.close();
         },
         (error) => {
-          console.error('Error updating user:', error);
-          this.toastr.error('Error updating user', 'Update Error');
+          console.error('Error updating product:', error);
+          this.toastr.error('Error updating product', 'Update Error');
         }
       );
     }

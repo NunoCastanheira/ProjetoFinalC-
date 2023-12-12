@@ -1,56 +1,43 @@
-import { Component, Inject, Injectable, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-
-
 import { ToastrService } from 'ngx-toastr';
-import { User } from '../../models/user.model';
-import { UserService } from '../../services/user.service';
 
-// @Injectable({
-//   providedIn: 'root'
-// })
+import { ClientService } from '../../services/client.service';
+import { Client } from '../../models/clients.model';
 
 @Component({
-  selector: 'app-user-card',
-  templateUrl: './user-card.component.html',
-  styleUrls: ['./user-card.component.scss']
+  selector: 'app-clients-card',
+  templateUrl: './clients-card.component.html',
+  styleUrls: ['./clients-card.component.scss']
 })
-export class UserCardComponent implements OnInit{
-  user: User;
-  userForm: FormGroup;
-  // roleOptions: {key: string, value: number}[] = [];
-  roleOptions: string[] = [];
-  numbers: number[] = [];
+export class ClientsCardComponent implements OnInit {
+  client: Client;
+  clientForm: FormGroup;
+
   constructor(
-    public dialogRef: MatDialogRef<UserCardComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: User,
+    public dialogRef: MatDialogRef<ClientsCardComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: Client,
     private fb: FormBuilder,
-    private userService: UserService,
+    private clientService: ClientService,
     private toastr: ToastrService
-  ){
-    this.user = data;
-    console.log(this.user,'<--- card')
-    this.userForm = this.fb.group({
-      name: [this.user?.name, Validators.required],
-      email: [this.user?.email, [Validators.required, Validators.email]],
-      password: [this.user?.password, this.user==undefined?Validators.required:''],
-      phoneNumber: [this.user?.phoneNumber, Validators.required],
+  ) {
+    this.client = data;
+    this.clientForm = this.fb.group({
+      firstName: [this.client?.firstName, Validators.required],
+      lastName: [this.client?.lastName, Validators.required],
+      email: [this.client?.email, [Validators.required, Validators.email]],
+      phoneNumber: [this.client?.phoneNumber, Validators.required],
     });
   }
 
-  ngOnInit(): void {
-    
-    // this.numbers.map(n => this.roleOptions[n] = {key: this.roleOptions[n].key, value: n})
-  }
+  ngOnInit(): void {}
 
-  onSubmit(){
-    if(this.user == undefined){
-      console.log(this.userForm.value);
-      this.userService.createUser(this.userForm.value).subscribe(
+  onSubmit() {
+    if (this.client === undefined) {
+      this.clientService.createClient(this.clientForm.value).subscribe(
         (res: string) => {
           if (res.startsWith('Error')) {
-            console.error(res);
             this.toastr.error(res, 'Create Error');
           } else {
             this.toastr.success(res, 'Create Success');
@@ -58,25 +45,24 @@ export class UserCardComponent implements OnInit{
           }
         },
         (error) => {
-          console.error('Error creating user:', error);
-          this.toastr.error('Error creating user', 'Create Error');
+          console.error('Error creating client:', error);
+          this.toastr.error('Error creating client', 'Create Error');
         }
       );
-      // this.userService.createUser(user.value).
-    }else{
-      
-      this.user.name = this.userForm.value.name;
-      this.user.email = this.userForm.value.email;
-      this.user.phoneNumber = this.userForm.value.phoneNumber;
-      console.log(this.user)
-      this.userService.updateUser(this.user.id, this.user).subscribe(
+    } else {
+      this.client.firstName = this.clientForm.value.firstName;
+      this.client.lastName = this.clientForm.value.lastName;
+      this.client.email = this.clientForm.value.email;
+      this.client.phoneNumber = this.clientForm.value.phoneNumber;
+
+      this.clientService.updateClient(this.client.id, this.client).subscribe(
         (res: string) => {
           this.toastr.success(res, 'Update Success');
           this.dialogRef.close();
         },
         (error) => {
-          console.error('Error updating user:', error);
-          this.toastr.error('Error updating user', 'Update Error');
+          console.error('Error updating client:', error);
+          this.toastr.error('Error updating client', 'Update Error');
         }
       );
     }

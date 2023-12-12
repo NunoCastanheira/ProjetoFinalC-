@@ -14,7 +14,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./products.component.scss'],
 })
 export class ProductsComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'description', 'price', 'quantity'];
+  displayedColumns: string[] = ['name', 'description', 'price', 'quantity', 'buttons'];
   dataSource: MatTableDataSource<Product>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -31,14 +31,12 @@ export class ProductsComponent implements OnInit {
   loadProducts(): void {
     this.productService.getAllProducts().subscribe(
       (products: Product[]) => {
-        console.log(products); // Log the entire response to the console
         this.dataSource = new MatTableDataSource(products);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       },
       (error) => {
         console.error('Error loading products:', error);
-        // Handle error, show a message, or redirect to an error page
       }
     );
   }
@@ -68,4 +66,16 @@ export class ProductsComponent implements OnInit {
     }
   }
 
+  deleteProduct(id: string) {
+    this.productService.deleteProduct(id).subscribe(
+      (res: string) => {
+        this.toastr.success(res, 'Delete Success');
+        this.loadProducts();
+      },
+      (error) => {
+        console.error('Error deleting user:', error);
+        this.toastr.error('Error deleting user', 'Delete Error');
+      }
+    );
+    }
 }

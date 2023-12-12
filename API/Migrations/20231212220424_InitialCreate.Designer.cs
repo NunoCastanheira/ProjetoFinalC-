@@ -11,7 +11,7 @@ using ProjetoFinalC_.Data;
 namespace ProjetoFinalC_.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20231210121421_InitialCreate")]
+    [Migration("20231212220424_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -37,6 +37,10 @@ namespace ProjetoFinalC_.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("longtext");
 

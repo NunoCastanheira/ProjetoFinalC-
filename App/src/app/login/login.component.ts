@@ -1,5 +1,3 @@
-// login.component.ts
-
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
@@ -29,13 +27,11 @@ export class LoginComponent implements OnInit {
       const { email, password } = this.loginForm.value;
       this.authService.login(email, password).subscribe(
         response => {
-          // Handle successful login
           console.log('Login successful', response);
           this.toastr.success('Login successful', 'Success');
           this.router.navigate(['/users']);
         },
         error => {
-          // Handle login error
           console.error('Login error', error);
           this.toastr.error('Invalid credentials', 'Error');
         }

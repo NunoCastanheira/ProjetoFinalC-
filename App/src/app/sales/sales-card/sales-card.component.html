@@ -1,0 +1,22 @@
+<!-- sale-card.component.html -->
+<h2 class="m-2 text-center">{{ sale === undefined ? "Create new sale" : "Edit sale " + sale.id }}</h2>
+<form class="m-5" [formGroup]="saleForm" (ngSubmit)="onSubmit()">
+  <div class="d-flex flex-column">
+    <mat-form-field appearance="fill">
+      <mat-label>Client ID</mat-label>
+      <input matInput formControlName="clientId" placeholder="Enter client ID" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Sale Date</mat-label>
+      <input matInput formControlName="saleDate" placeholder="Enter sale date" required>
+    </mat-form-field>
+
+    <!-- Add more form controls for other sale properties -->
+
+    <div class="d-flex gap-3 justify-content-center">
+      <button mat-raised-button color="primary" [disabled]="!saleForm.valid" type="submit">Submit</button>
+      <button mat-raised-button color="warn" [mat-dialog-close]="false">Cancel</button>
+    </div>
+  </div>
+</form>
